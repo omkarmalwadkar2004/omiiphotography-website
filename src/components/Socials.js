@@ -5,31 +5,26 @@ import {
   ImPinterest,
   ImInstagram,
 } from "react-icons/im";
+import { contactLinks } from "../data/content";
+
+const links = [
+  { href: contactLinks.facebook, icon: ImFacebook, label: "Facebook" },
+  { href: contactLinks.x, icon: ImTwitter, label: "X" },
+  { href: contactLinks.pinterest, icon: ImPinterest, label: "Pinterest" },
+  { href: contactLinks.instagram, icon: ImInstagram, label: "Instagram" },
+];
 
 const Socials = () => {
   return (
     <div className="hidden x1:flex text-white">
       <ul className="flex gap-x-4">
-        <li className="">
-          <a href="http://www.facebook.com" target="_blank">
-            <ImFacebook />
-          </a>
-        </li>
-        <li>
-          <a href="http://www.twitter.com" target="_blank">
-            <ImTwitter />
-          </a>
-        </li>
-        <li>
-          <a href="http://www.pinterest.com" target="_blank">
-            <ImPinterest />
-          </a>
-        </li>
-        <li>
-          <a href="http://www.instagram.com" target="_blank">
-            <ImInstagram />
-          </a>
-        </li>
+        {links.map(({ href, icon: Icon, label }) => (
+          <li key={label}>
+            <a href={href} target="_blank" rel="noreferrer" aria-label={label}>
+              <Icon />
+            </a>
+          </li>
+        ))}
       </ul>
     </div>
   );

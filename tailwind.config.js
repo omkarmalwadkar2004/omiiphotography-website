@@ -10,6 +10,8 @@ module.exports = {
       md: '768px',
       lg: '1024px',
       xl: '1192px',
+      // laptop-height windows (e.g. 1366x768 minus browser chrome)
+      short: { raw: '(max-height: 800px)' },
     },
     extend: {
       colors: {
@@ -17,6 +19,8 @@ module.exports = {
         grey: '#484B4B',
 
         accent: '#EEF7F9',
+        cream: '#F7F3EE',
+        gold: '#B88A5A',
       },
     },
   },

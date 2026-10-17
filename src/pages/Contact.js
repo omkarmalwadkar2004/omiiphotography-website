@@ -1,144 +1,270 @@
-import React from "react";
+import React, { useState } from "react";
 //import images
 import WomanImg from "../img/contact/Image 2025-09-30 at 09.29.36_508885fa.jpg";
 //import motion
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 //import transition
-import { transition1 } from "../transitions";
+import { transition1, revealProps } from "../transitions";
+import { FaInstagram, FaFacebookF, FaLinkedinIn, FaPinterestP, FaWhatsapp } from "react-icons/fa";
+import { FiMapPin, FiMail, FiClock, FiPlus, FiArrowDown, FiCheckCircle, FiUser } from "react-icons/fi";
+import SectionHeading from "../components/SectionHeading";
+import Footer from "../components/Footer";
+import { Field, inputClass } from "../components/Form";
+import { contactLinks, services, faqs, owner } from "../data/content";
+import { openWhatsApp, whatsappUrl } from "../utils/whatsapp";
+
+// react-icons 4.6 predates the X logo, so draw it inline
+const XIcon = () => (
+  <svg viewBox="0 0 512 512" fill="currentColor" className="w-4 h-4" aria-hidden="true">
+    <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z" />
+  </svg>
+);
+
+const chatLink = whatsappUrl("Hi Omii's Photography! I'd like to know more about a photoshoot.");
+
+// first entry is the main channel and gets a labelled button; the rest are icon buttons
+const socials = [
+  { href: chatLink, icon: FaWhatsapp, label: "WhatsApp", cta: "Chat on WhatsApp", color: "bg-[#25D366] hover:bg-[#1da851]" },
+  { href: contactLinks.instagram, icon: FaInstagram, label: "Instagram", color: "bg-primary hover:bg-pink-700" },
+  { href: contactLinks.facebook, icon: FaFacebookF, label: "Facebook", color: "bg-primary hover:bg-blue-600" },
+  { href: contactLinks.linkedin, icon: FaLinkedinIn, label: "LinkedIn", color: "bg-primary hover:bg-blue-900" },
+  { href: contactLinks.x, icon: XIcon, label: "X", color: "bg-primary hover:bg-grey" },
+  { href: contactLinks.pinterest, icon: FaPinterestP, label: "Pinterest", color: "bg-primary hover:bg-red-800" },
+];
+
+const details = [
+  { icon: FiUser, label: owner.role, value: owner.name },
+  { icon: FaWhatsapp, label: "WhatsApp", value: contactLinks.whatsappDisplay, href: chatLink },
+  { icon: FiMapPin, label: "Studio", value: "Pune, Maharashtra, India" },
+  { icon: FaInstagram, label: "Instagram DM", value: contactLinks.instagramHandle, href: contactLinks.instagram },
+  { icon: FiMail, label: "Email", value: contactLinks.email, href: `mailto:${contactLinks.email}` },
+  { icon: FiClock, label: "Response time", value: "Usually within 24 hours" },
+];
 
 const Contact = () => {
+  const [form, setForm] = useState({ name: "", email: "", phone: "", type: "", date: "", message: "" });
+  const [sent, setSent] = useState(false);
+  const [openFaq, setOpenFaq] = useState(0);
+  const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
+
+  const submit = (e) => {
+    e.preventDefault();
+    openWhatsApp(`Photoshoot enquiry — ${form.type || "General"}`, {
+      Name: form.name,
+      Email: form.email,
+      Phone: form.phone,
+      "Shoot type": form.type,
+      "Preferred date": form.date
+        ? new Date(`${form.date}T00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
+        : "",
+      Message: form.message,
+    });
+    setSent(true);
+  };
+
   return (
     <motion.section
-      initial={{ opacity: 0, y: "100%" }}
+      initial={{ opacity: 0, y: "100vh" }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: "100%" }}
+      exit={{ opacity: 0, y: "100vh" }}
       transition={transition1}
       className="section bg-orange-200"
     >
-      <div className="container mx-auto h-full">
-        <div className="flex flex-col lg:flex-row h-full items-center justify-start pt-36 gap-x-8 text-center lg:text-left">
-          {/*bg*/}
+      {/*hero*/}
+      <div className="container mx-auto px-6 lg:px-0">
+        <div className="flex flex-col lg:flex-row lg:min-h-screen items-center gap-12 lg:gap-16 pt-36 pb-16 lg:pt-[100px] lg:pb-6 text-center lg:text-left">
           <motion.div
-            initial={{ opacity: 0, y: "100%" }}
+            initial={{ opacity: 0, y: "-80%" }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: "100%" }}
+            exit={{ opacity: 0, y: "-80%" }}
             transition={transition1}
-            className="hidden lg:flex absolute bottom-0 left-0 right-0 top-72 -z-10"
-          ></motion.div>
-          {/*text & form*/}
-          <div className="lg:flex-1 lg:pt-32 px-4 ">
-            <h1 className="h1">Contact me</h1>
-            <div className="flex flex-row gap-5 mb-6 ml-3 ">
-              <button className="btn h-10 w-10 rounded-md text-xs gap-1  bg-pink-700">
-                <a
-                  className="hover:underline-offset-4"
-                  href="https://www.instagram.com/swapnil_malwadkar_photostudio?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
-                >
-                  Instagram
-                </a>
-                <span class="[&>svg]:h-4 [&>svg]:w-4">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 448 512"
-                  >
-                    !Font Awesome Free 6.5.1 by @fontawesome -
-                    https://fontawesome.com License -
-                    https://fontawesome.com/license/free Copyright 2024
-                    Fonticons, Inc.
-                    <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
-                  </svg>
-                </span>
-              </button>
-              {/*facebook*/}
-              <button className="btn h-10 w-10  rounded-md self-start bg-blue-600 text-xs">
-                <a className="hover:underline-offset-4" href="">
-                  <span class="[&>svg]:h-4 [&>svg]:w-4">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 320 512"
-                    >
-                      Font Awesome Free 6.5.1 by @fontawesome -
-                      https://fontawesome.com License -
-                      https://fontawesome.com/license/free Copyright 2024
-                      Fonticons, Inc.
-                      <path d="M80 299.3V512H196V299.3h86.5l18-97.8H196V166.9c0-51.7 20.3-71.5 72.7-71.5c16.3 0 29.4 .4 37 1.2V7.9C291.4 4 256.4 0 236.2 0C129.3 0 80 50.5 80 159.4v42.1H14v97.8H80z" />
-                    </svg>
-                  </span>
-                </a>
-                <a href="http://www.facebook.com">acebook</a>
-
-                {/*linkedin*/}
-              </button>
-              <button className="btn h-10 text-sm w-10 rounded-md mb-[30px] bg-blue-900">
-                
-                <a href="https://www.linkedin.com/in/swapnil-malwadkar-a87a68104?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAABp_WgcBz8gtPk6XBTFA37TaG4i4UU8dyXE&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3B3%2F8lXtLtQQewWcVZhZWs%2BA%3D%3D">Linked</a>
-                <span class="[&>svg]:h-4 [&>svg]:w-4">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 448 512"
-                  >
-                    Font Awesome Free 6.5.1 by @fontawesome -
-                    https://fontawesome.com License -
-                    https://fontawesome.com/license/free Copyright 2024
-                    Fonticons, Inc.
-                    <path d="M100.3 448H7.4V148.9h92.9zM53.8 108.1C24.1 108.1 0 83.5 0 53.8a53.8 53.8 0 0 1 107.6 0c0 29.7-24.1 54.3-53.8 54.3zM447.9 448h-92.7V302.4c0-34.7-.7-79.2-48.3-79.2-48.3 0-55.7 37.7-55.7 76.7V448h-92.8V148.9h89.1v40.8h1.3c12.4-23.5 42.7-48.3 87.9-48.3 94 0 111.3 61.9 111.3 142.3V448z" />
-                  </svg>
-                </span>
-              </button>
-              {/* twitter*/}
-              <button className=" gap-1 btn h-10 text-xs w-10 rounded-md mb-[30px] bg-black-900">
-                <a href="https://x.com/?lang=en-in"></a>
-                <span class="[&>svg]:h-4 [&>svg]:w-4">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 512 512"
-                  >
-                    Font Awesome Free 6.5.1 by @fontawesome -
-                    https://fontawesome.com License -
-                    https://fontawesome.com/license/free Copyright 2024
-                    Fonticons, Inc.
-                    <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z" />
-                  </svg>
-                </span>
-              </button>
-              {/*pinterest*/}
-              <button className="bg-red-900 btn h-10 text-xs w-10 rounded-md mb-[30px] bg-black-900">
-                <span class="[&>svg]:h-4 [&>svg]:w-4">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 496 512"
-                  >
-                    Font Awesome Free 6.5.1 by @fontawesome -
-                    https://fontawesome.com License -
-                    https://fontawesome.com/license/free Copyright 2024
-                    Fonticons, Inc.
-                    <path d="M496 256c0 137-111 248-248 248-25.6 0-50.2-3.9-73.4-11.1 10.1-16.5 25.2-43.5 30.8-65 3-11.6 15.4-59 15.4-59 8.1 15.4 31.7 28.5 56.8 28.5 74.8 0 128.7-68.8 128.7-154.3 0-81.9-66.9-143.2-152.9-143.2-107 0-163.9 71.8-163.9 150.1 0 36.4 19.4 81.7 50.3 96.1 4.7 2.2 7.2 1.2 8.3-3.3 .8-3.4 5-20.3 6.9-28.1 .6-2.5 .3-4.7-1.7-7.1-10.1-12.5-18.3-35.3-18.3-56.6 0-54.7 41.4-107.6 112-107.6 60.9 0 103.6 41.5 103.6 100.9 0 67.1-33.9 113.6-78 113.6-24.3 0-42.6-20.1-36.7-44.8 7-29.5 20.5-61.3 20.5-82.6 0-19-10.2-34.9-31.4-34.9-24.9 0-44.9 25.7-44.9 60.2 0 22 7.4 36.8 7.4 36.8s-24.5 103.8-29 123.2c-5 21.4-3 51.6-.9 71.2C65.4 450.9 0 361.1 0 256 0 119 111 8 248 8s248 111 248 248z" />
-                  </svg>
-                </span>
-                <a href="http://www.pinterest.com">interest</a>
-              </button>
-            </div>
-            <p className="mb-6 ml-3"></p>
-          </div>
-
-          {/*image*/}
-
-          <motion.div
-            initial={{ opacity: 0, y: "100%" }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: "100%" }}
-            transition={{ transition: transition1, duration: 1.5 }}
             className="lg:flex-1"
           >
-            <img src={WomanImg} alt="" />
+            <div className="flex items-center justify-center lg:justify-start gap-3 mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-grey">
+              <span className="h-px w-8 bg-gold" />
+              Get in touch
+            </div>
+            <h1 className="h1 mb-6 lg:short:mb-4">Contact me</h1>
+            <p className="text-lg max-w-md mx-auto lg:mx-0 mb-8 lg:short:mb-6">
+              Planning a maternity shoot, a newborn session or a first birthday?
+              Say hello — I'd love to hear what you have in mind.
+            </p>
+            <div className="flex flex-wrap justify-center lg:justify-start gap-2">
+              {socials.map(({ href, icon: Icon, label, cta, color }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={cta || label}
+                  title={cta || label}
+                  className={`inline-flex items-center justify-center gap-2 h-11 rounded-full text-white text-sm font-semibold transition ${color} ${
+                    cta ? "px-5" : "w-11"
+                  }`}
+                >
+                  <Icon className={cta ? "text-lg" : ""} />
+                  {cta}
+                </a>
+              ))}
+            </div>
+            <a
+              href="#enquiry"
+              className="group inline-flex items-center gap-2 mt-8 lg:short:mt-6 font-semibold uppercase tracking-wider text-sm border-b border-primary pb-1"
+            >
+              Or send an enquiry
+              <FiArrowDown className="transition group-hover:translate-y-1" />
+            </a>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: "100%" }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: "100%" }}
+            transition={{ ...transition1, duration: 1.5 }}
+            className="lg:flex-1 w-full"
+          >
+            <img
+              src={WomanImg}
+              alt="Camera tossed mid-air in an autumn forest"
+              className="w-full rounded-2xl shadow-2xl object-cover lg:max-h-[calc(100vh_-_160px)]"
+            />
           </motion.div>
         </div>
       </div>
+
+      {/*enquiry form*/}
+      <div id="enquiry" className="bg-white section-pad scroll-mt-[100px]">
+        <div className="container mx-auto px-6 lg:px-0 grid lg:grid-cols-5 gap-12 lg:gap-16">
+          <div className="lg:col-span-2">
+            <SectionHeading
+              align="left"
+              eyebrow="Book a session"
+              title="Tell me about your shoot"
+              text="Share a few details and I'll get back to you with availability and packages."
+            />
+            <ul className="space-y-6 -mt-4">
+              {details.map(({ icon: Icon, label, value, href }, i) => (
+                <motion.li key={label} {...revealProps} custom={i} className="flex items-center gap-4 text-left">
+                  <span className="w-12 h-12 shrink-0 rounded-full bg-cream text-gold text-xl flex items-center justify-center">
+                    <Icon />
+                  </span>
+                  <span>
+                    <span className="block text-xs uppercase tracking-[0.2em] text-grey">{label}</span>
+                    {href ? (
+                      <a
+                        href={href}
+                        target={href.startsWith("http") ? "_blank" : undefined}
+                        rel="noreferrer"
+                        className="font-semibold text-sm sm:text-base hover:underline break-all"
+                      >
+                        {value}
+                      </a>
+                    ) : (
+                      <span className="font-semibold">{value}</span>
+                    )}
+                  </span>
+                </motion.li>
+              ))}
+            </ul>
+          </div>
+
+          <motion.form
+            {...revealProps}
+            onSubmit={submit}
+            className="lg:col-span-3 rounded-3xl bg-cream p-6 sm:p-8 lg:p-10 grid sm:grid-cols-2 gap-5"
+          >
+            <Field label="Your name" required>
+              <input className={inputClass} required value={form.name} onChange={set("name")} placeholder="Full name" />
+            </Field>
+            <Field label="Email" required>
+              <input className={inputClass} required type="email" value={form.email} onChange={set("email")} placeholder="you@email.com" />
+            </Field>
+            <Field label="Phone">
+              <input className={inputClass} type="tel" value={form.phone} onChange={set("phone")} placeholder="+91" />
+            </Field>
+            <Field label="Shoot type">
+              <select className={inputClass} value={form.type} onChange={set("type")}>
+                <option value="">Choose one</option>
+                {services.map((s) => (
+                  <option key={s.title}>{s.title}</option>
+                ))}
+                <option>Something else</option>
+              </select>
+            </Field>
+            <Field label="Preferred date" full>
+              <input className={inputClass} type="date" value={form.date} onChange={set("date")} />
+            </Field>
+            <Field label="Message" required full>
+              <textarea
+                className={`${inputClass} h-auto py-4 resize-none`}
+                rows={5}
+                required
+                value={form.message}
+                onChange={set("message")}
+                placeholder="Tell me about the occasion, ideas or anything I should know"
+              />
+            </Field>
+            <div className="sm:col-span-2 flex flex-col sm:flex-row sm:items-center gap-4">
+              <button type="submit" className="btn gap-2 px-8 whitespace-nowrap">
+                <FaWhatsapp className="text-xl" />
+                Send on WhatsApp
+              </button>
+              <AnimatePresence>
+                {sent && (
+                  <motion.p
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-start gap-2 text-sm text-grey text-left"
+                  >
+                    <FiCheckCircle className="text-gold text-lg shrink-0 mt-0.5" />
+                    WhatsApp should open with your enquiry typed out — just tap send.
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.form>
+        </div>
+      </div>
+
+      {/*faq*/}
+      <div className="bg-cream section-pad">
+        <div className="container mx-auto px-6 lg:px-0">
+          <SectionHeading eyebrow="Good to know" title="Frequently asked questions" />
+          <div className="max-w-3xl mx-auto divide-y divide-black/10 border-y border-black/10">
+            {faqs.map((f, i) => {
+              const isOpen = openFaq === i;
+              return (
+                <div key={f.q}>
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaq(isOpen ? null : i)}
+                    aria-expanded={isOpen}
+                    className="w-full flex items-center justify-between gap-6 py-6 text-left"
+                  >
+                    <span className="font-primary font-bold text-xl lg:text-2xl">{f.q}</span>
+                    <FiPlus className={`shrink-0 text-2xl transition-transform duration-300 ${isOpen ? "rotate-45" : ""}`} />
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.35 }}
+                        className="overflow-hidden"
+                      >
+                        <p className="pb-6 text-grey text-lg max-w-2xl">{f.a}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <Footer />
     </motion.section>
   );
 };

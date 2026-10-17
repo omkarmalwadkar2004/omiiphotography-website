@@ -4,15 +4,24 @@
 
 @layer base {
   body {
-    @apply overflow-hidden text-primary font-secondary bg-white;
+    @apply overflow-x-hidden text-primary font-secondary bg-white;
   }
   .h1 {
-    @apply text-[54px] lg:text-[108px] font-primary font-bold capitalize leading-[120%] tracking-[-0.05em] mb-2;
+    @apply text-[54px] lg:text-[108px] lg:short:text-[80px] font-primary font-bold capitalize leading-[120%] tracking-[-0.05em] mb-2;
   }
   .section {
-    @apply h-screen w-screen;
+    @apply min-h-screen w-full;
   }
   .btn {
-    @apply py-[18px] px-[50px] h-[66px] flex items-center justify-center text-base uppercase font-secondary font-semibold bg-primary text-white;
+    @apply py-[18px] px-[50px] h-[66px] flex items-center justify-center text-base uppercase font-secondary font-semibold bg-primary text-white transition-colors duration-300 hover:bg-grey;
+  }
+  .btn-outline {
+    @apply bg-transparent text-primary border border-primary hover:bg-primary hover:text-white;
+  }
+  .btn-light {
+    @apply bg-white text-primary hover:bg-cream;
+  }
+  .section-pad {
+    @apply py-20 lg:py-28;
   }
 }

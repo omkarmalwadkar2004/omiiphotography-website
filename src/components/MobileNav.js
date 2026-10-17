@@ -20,7 +20,7 @@ const MobileNav = () => {
   }
  }
    return(
-   <nav className='text-white x1:hidden'>
+   <nav className='text-white lg:hidden'>
     <div 
     onClick={()=> setOpenMenu(true) } 
     className='text-3xl cursor-pointer'>
@@ -30,7 +30,7 @@ const MobileNav = () => {
     <motion.div 
     variants={menuVariants}
     initial = 'hidden'
-    animate = {openMenu ? 'show' : ''}
+    animate = {openMenu ? 'show' : 'hidden'}
     className='bg-primary shadow-2xl w-full absolute top-0 right-0 max-w-xs h-screen z-20'>
       {/*icon*/}
       <div 
@@ -39,7 +39,8 @@ const MobileNav = () => {
       <IoMdClose/>
       </div>
       {/*menu list*/}
-      <ul className='h-full flex flex-col justify-center items-center gap-y-8 tex-primary font-primary font-bold text-3xl'>
+      {/*close the panel once a link is tapped*/}
+      <ul onClick={() => setOpenMenu(false)} className='h-full flex flex-col justify-center items-center gap-y-8 tex-primary font-primary font-bold text-3xl'>
         <li><Link to='/'>Home</Link></li>
         <li><Link to='/about'>About</Link></li>
         <li><Link to='/portfolio'>Portfolio</Link></li>
